@@ -6,15 +6,15 @@ namespace Skill_Tracker.Models
     public class UserProfile
     {
         [BsonId]
-        int UserId { get; set; }
+        public int UserId { get; set; }
         [BsonElement("name")]
-        string Name { get; set; }
+        public string Name { get; set; }
         [BsonElement("associateid")]
-        int AssociateId { get; set; }
+       public  int AssociateId { get; set; }
         [BsonElement("mobileno")]
-        int MobileNo { get; set; }
+       public int MobileNo { get; set; }
         [BsonElement("email")]
-        string Email { get; set; }
+       public string Email { get; set; }
 
     }
 }

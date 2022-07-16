@@ -12,15 +12,24 @@ namespace Skill_Tracker.Services
             var database = mongoClient.GetDatabase(setting.DatabaseName);
             _userprofile = database.GetCollection<UserProfile>(setting.UserProfileCollectionName);
         }
-        public Task<UserProfile> AddProfile(UserProfile userprofile)
+        public string AddProfile(UserProfile userprofile)
         {
             _userprofile.InsertOne(userprofile);
-            return userprofile;
+            return "User successfully added";
         }
 
-        public Task<String > UpdateProfile(int userid)
+        public String  UpdateProfile(int userid)
         {
-            var user = _userprofile.Find(userProfile => userProfile.userid == userid);
+            var user = _userprofile.Find(userProfile => userProfile.UserId == userid);
+            if(user!=null)
+            {
+               // _userprofile.ReplaceOne(userProfile => userProfile.UserId == userid, userid);
+                return "Done";
+            }
+            else
+            {
+                return "UserId not found";
+            }
         }
     }
 }
