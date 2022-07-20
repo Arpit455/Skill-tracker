@@ -14,6 +14,8 @@ const App = () => {
           <Link to="/">
             <h1>Skill Tracker</h1>
           </Link>
+          <br></br>
+          <br></br>
           <div className="wrapper">
             <Link to="userprofile" className="btn btn-outline-primary">
               Add User Profile
