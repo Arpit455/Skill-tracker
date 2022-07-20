@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Skill_Tracker.Models;
 using Skill_Tracker.Services;
+using SkillTracker.Model;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -11,6 +12,7 @@ namespace Skill_Tracker.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService userservice;
+        
 
         public UserController(IUserService userservice)
         {
@@ -37,15 +39,22 @@ namespace Skill_Tracker.Controllers
             userservice.AddProfile(userprofile);
         }
         [HttpPut]
-        public void UpdateProfile([FromBody] int  userid)
+        [Route("update-profile/{id}")]
+        public string put(int id, Mergeskills mergeskill)
         {
-            userservice.UpdateProfile(userid);
-        }
+            var result = userservice.FindProfile(id);
+            if (result == null)
+            {
+                return "user id is not found";
+            }
 
-        // PUT api/<UserController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
+            if (result.LastUpdated.AddDays(10) > DateTimeOffset.UtcNow)
+            {
+                return "wait 10 days before updating the profile again";
+            }
+            userservice.UpdateProfile(id, mergeskill.technicalSkill, mergeskill.nontechnicalSkill);
+
+            return "updated successfully";
         }
 
         // DELETE api/<UserController>/5

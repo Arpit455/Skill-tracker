@@ -4,6 +4,7 @@ using Skill_Tracker.Models;
 using Skill_Tracker.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+var policyName = "_myAllowSpecificOrigins";
 
 // Add services to the container.
 builder.Services.Configure<SkillTrackerDatabaseSetting>
@@ -16,6 +17,19 @@ builder.Services.AddSingleton<IMongoClient>
     (s => new MongoClient(builder.Configuration.GetValue<string>("SkillTrackerDatabaseSetting:ConnectionString")));
 
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: policyName,
+                      builder =>
+                      {
+                          builder
+                            .WithOrigins("http://localhost:3000") // specifying the allowed origin
+                            .WithMethods("POST")
+                            .WithMethods("PUT")
+                            .WithMethods("GET")// defining the allowed HTTP method
+                            .AllowAnyHeader(); // allowing any header to be sent
+                      });
+});
 
 
 builder.Services.AddControllers();
@@ -33,9 +47,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors(policyName);
 
 app.UseAuthorization();
 
-app.MapControllers();
+ app.MapControllers();
 
 app.Run();
